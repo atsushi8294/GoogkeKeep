@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="CheckedCell" customModule="GoogleKeep" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m4h-YJ-DNM">
+                        <rect key="frame" x="54" y="14.5" width="15" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="7Tb-al-X0u"/>
+                            <constraint firstAttribute="width" constant="15" id="tDW-NV-NdA"/>
+                        </constraints>
+                        <state key="normal" image="CheckedBox"/>
+                        <connections>
+                            <action selector="checkCell:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="kkO-uf-bdF"/>
+                        </connections>
+                    </button>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="smI-Av-hbd">
+                        <rect key="frame" x="82" y="3" width="190" height="38"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="textColor" systemColor="labelColor"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tnQ-Ls-DM3">
+                        <rect key="frame" x="285" y="17" width="10" height="10"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="10" id="8gD-eD-g3I"/>
+                            <constraint firstAttribute="width" constant="10" id="DMD-at-PCc"/>
+                        </constraints>
+                        <state key="normal" image="DeleteButton"/>
+                        <connections>
+                            <action selector="deleteCell:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="9zq-Yv-qUH"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="smI-Av-hbd" firstAttribute="leading" secondItem="m4h-YJ-DNM" secondAttribute="trailing" constant="13" id="4Vb-nd-ZjP"/>
+                    <constraint firstItem="m4h-YJ-DNM" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="54" id="7bT-8R-uxc"/>
+                    <constraint firstAttribute="bottom" secondItem="smI-Av-hbd" secondAttribute="bottom" constant="3" id="Pgl-Ig-cjw"/>
+                    <constraint firstItem="m4h-YJ-DNM" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="14.5" id="Qbr-FI-xef"/>
+                    <constraint firstItem="smI-Av-hbd" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="3" id="UrL-HJ-4wg"/>
+                    <constraint firstAttribute="trailing" secondItem="tnQ-Ls-DM3" secondAttribute="trailing" constant="25" id="aEi-3v-FF5"/>
+                    <constraint firstItem="tnQ-Ls-DM3" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="17" id="nlx-9g-Asu"/>
+                    <constraint firstItem="tnQ-Ls-DM3" firstAttribute="leading" secondItem="smI-Av-hbd" secondAttribute="trailing" constant="13" id="uvN-hd-t3H"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="cellLbl" destination="smI-Av-hbd" id="PnF-lq-rUj"/>
+                <outlet property="delBtn" destination="tnQ-Ls-DM3" id="abW-2Q-4Qd"/>
+            </connections>
+            <point key="canvasLocation" x="-72" y="84"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="CheckedBox" width="179.64741516113281" height="179.64741516113281"/>
+        <image name="DeleteButton" width="151.19744873046875" height="151.19744873046875"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
