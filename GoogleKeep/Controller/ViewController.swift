@@ -26,22 +26,14 @@ class ViewController: UIViewController {
     /// チェックされたデータを格納
     var checkedList:[TodoData] = []
     
-    var cellHeights:[Int] = []
-    
     
     let TodoListTVTag = 0
     let CheckedListTVTag = 1
     let TodoCellID = "todoCell"
     let CheckedCellID = "checkedCell"
-    let CellHeight = 40
+    let CellHeight: CGFloat = 40
     var tvTag = 0
     var crrCellTag = 0
-    var todoHeight = 0
-    var checkedHeight = 0
-    
-    
-//    private var myReorderImage:UIImage! = UIImage(named: "DragButton")
-    private var myReorderImage:UIImage! = nil
     
     
     override func viewDidLoad() {
@@ -101,7 +93,6 @@ class ViewController: UIViewController {
     /// - Parameter tag: 取得したいセルの添字
     /// - Returns:　tag番目のCheckedCell
     func getCheckedCell(_ tag: Int) -> CheckedCell {
-        print("\ntag: \(tag)")
         let indexPath = IndexPath(row: tag, section: 0)
         let cell = checkedTV.cellForRow(at: indexPath) as! CheckedCell
         return cell
@@ -135,37 +126,6 @@ class ViewController: UIViewController {
     }
 
 
-    /// TableViewの高さをリロードする
-    func reloadTVConstant() {
-        print("\n\n===== Reload TV Constant ======")
-        todoListTV.performBatchUpdates(nil) { (finished) in
-            self.todoHeight = 0
-            for (i, _) in self.todoList.enumerated() {
-                self.todoHeight += Int(self.getTodoCell(i).frame.height) - self.CellHeight
-                self.todoTVConstraints.constant = CGFloat(self.CellHeight * self.todoList.count + self.todoHeight)
-                UIView.animate(withDuration: 0.1) {
-                    self.view.layoutIfNeeded()
-                }
-            }
-        }
-        checkedTV.performBatchUpdates(nil) { (finished) in
-            self.checkedHeight = 0
-            for (i, _) in self.checkedList.enumerated() {
-                self.checkedHeight += Int(self.getCheckedCell(i).frame.height) - self.CellHeight
-                self.checkedTVConstrains.constant = CGFloat(self.CellHeight * self.todoList.count + self.checkedHeight)
-                UIView.animate(withDuration: 0.1) {
-                    self.view.layoutIfNeeded()
-                }
-            }
-        }
-        todoTVConstraints.constant = CGFloat(CellHeight * todoList.count + todoHeight)
-        checkedTVConstrains.constant = CGFloat(CellHeight * checkedList.count + checkedHeight)
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    
     /// allTodoDataのItemインスタンスのタグを昇順に並べる
     func resetDataTag() {
         for (i, item) in allTodoData.enumerated() {
@@ -185,7 +145,6 @@ class ViewController: UIViewController {
             }
             switchTV()
         }
-        print("// リセット後のTV: \(tvTag)")
     }
     
     
@@ -219,7 +178,7 @@ class ViewController: UIViewController {
     
     
     @IBAction func addItem(_ sender: Any) {
-        insertItem(text: "", tvTag: 0, tag: todoList.count)
+        insertItem(tvTag: 0, tag: todoList.count)
     }
 }
 
@@ -233,32 +192,19 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
-//    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-//        return true
-//    }
-//
-//
-//    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-////        return
-//    }
-    
-    
     func setUpTV() {
         todoListTV.delegate = self
         todoListTV.dataSource = self
         todoListTV.register(UINib(nibName: "TodoCell", bundle: nil), forCellReuseIdentifier: TodoCellID)
         todoListTV.allowsSelection = false
         
-        // MARK: editing
-//        todoListTV.isEditing = true
-        
         checkedTV.delegate = self
         checkedTV.dataSource = self
         checkedTV.register(UINib(nibName: "CheckedCell", bundle: nil), forCellReuseIdentifier: CheckedCellID)
         checkedTV.allowsSelection = false
         
-        todoTVConstraints.constant = CGFloat(CellHeight * todoList.count)
-        checkedTVConstrains.constant = CGFloat(CellHeight * checkedList.count)
+        todoTVConstraints.constant = CellHeight * CGFloat(todoList.count)
+        checkedTVConstrains.constant = CellHeight * CGFloat(checkedList.count)
     }
 
 
@@ -297,7 +243,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        tableView.estimatedRowHeight = CGFloat(CellHeight)
+        tableView.estimatedRowHeight = CellHeight
         return UITableView.automaticDimension
     }
     
@@ -309,25 +255,64 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
 
 
+
+
+
+
+// MARK: OperationCellDelegate
 extension ViewController: OperationCellDelegate {
 
 
-    func resizeCellLbl(tvTag: Int, tag: Int, height: Int) {
-        self.tvTag = tvTag
-        print("\n\n======\nリロード開始\n======")
-        reloadTVConstant()
-//        getTV().reloadData()
-        todoListTV.reloadData()
-        focusCell(tvTag: tvTag, cellTag: tag)
+    /// TableViewの高さをリロードする
+    func reloadTVConstant() {
+        print("\n\n===== Reload TV Constant ======")
+        var todoHeight: CGFloat = 0
+        var checkedHeight: CGFloat = 0
+        
+        for (item) in todoList {
+            todoHeight += item.height
+        }
+        for (item) in checkedList {
+            checkedHeight += item.height
+        }
+        
+        todoTVConstraints.constant = CellHeight * CGFloat(todoList.count) + todoHeight
+        checkedTVConstrains.constant = CellHeight * CGFloat(checkedList.count) + checkedHeight
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+        
+        todoListTV.performBatchUpdates(nil) { (finished) in
+            todoHeight = 0
+            for (i, item) in self.todoList.enumerated() {
+                item.setHeight(height: self.getTodoCell(i).frame.height - self.CellHeight)
+                todoHeight += item.height
+                self.todoTVConstraints.constant = self.CellHeight * CGFloat(self.todoList.count) + todoHeight
+                UIView.animate(withDuration: 0.3) {
+                    self.view.layoutIfNeeded()
+                }
+            }
+        }
+        
+        checkedTV.performBatchUpdates(nil) { (finished) in
+            checkedHeight = 0
+            for (i, item) in self.checkedList.enumerated() {
+                item.setHeight(height: self.getCheckedCell(i).frame.height - self.CellHeight)
+                checkedHeight += item.height
+                self.checkedTVConstrains.constant = self.CellHeight * CGFloat(self.checkedList.count) + checkedHeight
+                UIView.animate(withDuration: 0.3) {
+                    self.view.layoutIfNeeded()
+                }
+            }
+        }
     }
-
+    
 
     /// 選択中のセル以外のXボタンを非表示にする
     /// - Parameters:
     ///   - tvTag: 選択中のセルのTVTag
     ///   - tag: 選択中のセルのタグ
     func hideDelBtn(tvTag: Int, tag: Int) {
-        print("\nHide Del Btn")
         self.tvTag = tvTag
         crrCellTag = tag
 
@@ -352,12 +337,14 @@ extension ViewController: OperationCellDelegate {
     ///   - text: 追加するアイテムの文字列
     ///   - tvTag: 追加するTVのタグ
     ///   - tag: 追加する位置
-    func insertItem(text: String, tvTag: Int, tag: Int) {
+    func insertItem(tvTag: Int, tag: Int) {
 
         // MARK: text要らなくね？
 
         print("\n\n===== セルの挿入 =====")
-        let todoData = TodoData(title: text, tag: tag)
+        self.tvTag = tvTag
+        
+        let todoData = TodoData(title: "", tag: tag)
         let indexPath = IndexPath(row: tag, section: 0)
         var insertTag = 0
 
@@ -371,7 +358,6 @@ extension ViewController: OperationCellDelegate {
         allTodoData.insert(todoData, at: insertTag)
         resetDataTag()
         reloadTodoData()
-
         getTV().insertRows(at: [indexPath], with: .automatic)
         reloadTVConstant()
         resetCellTag()
@@ -383,8 +369,6 @@ extension ViewController: OperationCellDelegate {
     /// - Parameter tvTag: TableViewのタグ
     /// - Parameter cellTag: フォーカスするセルのタグ
     func focusCell(tvTag: Int, cellTag: Int) {
-        print("・セルにフォーカス")
-        print("cellTag: \(cellTag)")
         crrCellTag = cellTag
         if tvTag == TodoListTVTag && todoList.count != 0 {
             todoListTV.performBatchUpdates(nil, completion: { (finished) in
@@ -413,8 +397,8 @@ extension ViewController: OperationCellDelegate {
         }
         reloadTodoData()
         getTV().deleteRows(at: [IndexPath(row: tag, section: 0)], with: .automatic)
-        resetCellTag()
         reloadTVConstant()
+        resetCellTag()
         switchCheckListHeader()
     }
 
@@ -432,7 +416,7 @@ extension ViewController: OperationCellDelegate {
                 item.title = text
             }
         }
-//        debugShowData()
+        debugShowData()
     }
 
 
@@ -468,7 +452,7 @@ extension ViewController: OperationCellDelegate {
         switchTV()
         resetCellTag()
         switchCheckListHeader()
-
+        
         if cellTag < crrCellTag {
             crrCellTag -= 1
         } else if crrCellTag == cellTag {
@@ -478,7 +462,7 @@ extension ViewController: OperationCellDelegate {
 
         hideDelBtn(tvTag: tvTag, tag: crrCellTag)
 
-//        debugShowData()
+        debugShowData()
         self.tvTag = tvTag
     }
     

@@ -45,8 +45,7 @@ extension CheckedCell: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         delegate?.saveData(text: textView.text, tvTag: tvTag, tag: self.tag)
-        print("\n\n|||||| Checked CellのResizeCell")
-        delegate?.resizeCellLbl(tvTag: tvTag, tag: self.tag, height: 0)
+        delegate?.reloadTVConstant()
     }
     
     
@@ -54,9 +53,9 @@ extension CheckedCell: UITextViewDelegate {
     
         if text == "\n" {
             print("\n改行が押されてセルの挿入")
-            delegate?.insertItem(text: "asfeajfleaflsifelaisjflasjeflasjleiajlseijafjjjj", tvTag: tvTag, tag: self.tag + 1)
+            delegate?.insertItem(tvTag: tvTag, tag: self.tag + 1)
             return false
-        } else if text == "" && self.tag != 0 {
+        } else if text == "" && self.tag != 0 && textView.text! == "" {
             delegate?.removeItem(tvTag: tvTag, tag: self.tag)
             delegate?.focusCell(tvTag: tvTag, cellTag: self.tag - 1)
         }

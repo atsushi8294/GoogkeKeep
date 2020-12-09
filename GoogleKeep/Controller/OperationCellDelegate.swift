@@ -9,11 +9,11 @@
 import UIKit
 
 protocol OperationCellDelegate {
-    func insertItem(text: String, tvTag: Int, tag: Int)
+    func insertItem(tvTag: Int, tag: Int)
     func focusCell(tvTag: Int, cellTag: Int)
     func removeItem(tvTag: Int, tag: Int)
     func check(tvTag: Int, cellTag: Int)
     func hideDelBtn(tvTag: Int, tag: Int)
     func saveData(text: String, tvTag: Int, tag: Int)
-    func resizeCellLbl(tvTag: Int, tag: Int, height: Int)
+    func reloadTVConstant()
 }

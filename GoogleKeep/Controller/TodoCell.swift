@@ -21,7 +21,6 @@ class TodoCell: UITableViewCell {
         
         todoCellLbl.delegate = self
         todoCellLbl.autocorrectionType = .no
-//        lblHeight.constant = 200
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -47,14 +46,14 @@ extension TodoCell: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
         delegate?.saveData(text: textView.text, tvTag: tvTag, tag: self.tag)
-        delegate?.resizeCellLbl(tvTag: tvTag, tag: self.tag, height: 0)
+        delegate?.reloadTVConstant()
     }
 
     // 文字が入力されるたびに呼ばれる
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
 
         if text == "\n" {
-            delegate?.insertItem(text: "", tvTag: tvTag, tag: self.tag + 1)
+            delegate?.insertItem(tvTag: tvTag, tag: self.tag + 1)
             return false
         } else if text == "" && self.tag != 0 && textView.text! == "" {
             delegate?.removeItem(tvTag: tvTag, tag: self.tag)
@@ -66,7 +65,6 @@ extension TodoCell: UITextViewDelegate {
 
     // 編集開始すると呼ばれる
     func textViewDidBeginEditing(_ textView: UITextView) {
-//        print("\n編集開始")
         delegate?.hideDelBtn(tvTag: tvTag, tag: self.tag)
     }
 

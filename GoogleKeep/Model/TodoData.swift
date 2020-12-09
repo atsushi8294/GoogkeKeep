@@ -12,7 +12,7 @@ class TodoData {
     var title: String!
     var tag: Int!
     var isDone: Bool!
-    var height: Int = 0
+    var height: CGFloat = 0
     
     
     /// 初期化
@@ -35,7 +35,7 @@ class TodoData {
     }
     
     
-    func setHeight(height: Int) {
+    func setHeight(height: CGFloat) {
         self.height = height
     }
 }
